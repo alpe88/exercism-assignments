@@ -7,8 +7,14 @@ const getRandomNumber = (min = 1, max) => {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + min;
 };
 
-const rollDice = () => {
-return getRandomNumber(1,6);
+const rollDice = (times) => {
+  let diceRollResults = [];
+  for(roll of times) {
+    const diseRollResult = getRandomNumber(1,6);
+    diceRollResults.push(diseRollResult);
+  }
+  
+  return diceRollResults;
 };
 
 export const abilityModifier = (abilityScore) => {
@@ -21,6 +27,9 @@ export const abilityModifier = (abilityScore) => {
 
 export class Character {
   static rollAbility() {
+    const diceRolls = rollDice(4);
+    diceRolls.filter(roll => roll !== Math.min(...diceRolls));
+    console.log(diceRolls);
     return '';
   }
 
