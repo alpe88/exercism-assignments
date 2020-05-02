@@ -3,61 +3,88 @@
 // convenience to get you started writing code faster.
 //
 
+const DICE = 4;
+const DICE_SIDES = [1, 6];
+const LOWEST_ABILITY_MODIFIER = 3;
+const HIGHEST_ABILITY_MODIFIER = 18;
+
+const removeLowest = (array) => {
+  let lowestRoll = Math.min(...array);
+  return array.filter(element => element != lowestRoll);
+};
+
+const addRolls = (array) => {
+  return array.reduce((acc, roll) => acc + roll);
+};
+
 const getRandomNumber = (min = 1, max) => {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + min;
 };
 
 const rollDice = (times) => {
-  let diceRollResults = [];
-  for(roll of times) {
-    const diseRollResult = getRandomNumber(1,6);
-    diceRollResults.push(diseRollResult);
-  }
-  
-  return diceRollResults;
+  const diceRollResult = [...Array(times)].map((_, i) => getRandomNumber(DICE_SIDES[0], DICE_SIDES[6]));
+  return diceRollResult;
+};
+
+const calculateAbilityScore = (abilityScore) => {
+  return (abilityScore - 10)/2;
 };
 
 export const abilityModifier = (abilityScore) => {
-  if(abilityScore >= 18) {
-    throw new Error('Ability scores can be at most 18');
+  if(abilityScore < LOWEST_ABILITY_MODIFIER) {
+    throw new Error(`Ability scores must be at least ${LOWEST_ABILITY_MODIFIER}`);
+  }
+
+  if(abilityScore > HIGHEST_ABILITY_MODIFIER) {
+    throw new Error(`Ability scores can be at most ${HIGHEST_ABILITY_MODIFIER}`);
   }
   
-  return Math.floor((abilityScore - 10)/2);
+  return Math.floor(calculateAbilityScore(abilityScore));
 };
 
 export class Character {
+  constructor() {
+    this._strength = Character.rollAbility();
+    this._dexterity = Character.rollAbility();
+    this._constitution = Character.rollAbility();
+    this._intelligence = Character.rollAbility();
+    this._wisdom = Character.rollAbility();
+    this._charisma = Character.rollAbility();
+    this._hitpoints = 10 + abilityModifier(this._constitution);
+  }
+
   static rollAbility() {
-    const diceRolls = rollDice(4);
-    diceRolls.filter(roll => roll !== Math.min(...diceRolls));
-    console.log(diceRolls);
-    return '';
+    let diceRolls = rollDice(DICE);
+    const goodRolls = removeLowest(diceRolls);
+    const abilityTotal = addRolls(goodRolls);
+    return abilityTotal;
   }
 
   get strength() {
-    throw new Error("Remove this statement and implement this function");
+    return this._strength;
   }
 
   get dexterity() {
-    throw new Error("Remove this statement and implement this function");
+    return this._dexterity;
   }
 
   get constitution() {
-    throw new Error("Remove this statement and implement this function");
+    return this._constitution;
   }
 
   get intelligence() {
-    throw new Error("Remove this statement and implement this function");
+    return this._intelligence;
   }
 
   get wisdom() {
-    throw new Error("Remove this statement and implement this function");
+    return this._wisdom;
   }
 
   get charisma() {
-    throw new Error("Remove this statement and implement this function");
+    return this._charisma;
   }
 
   get hitpoints() {
-    throw new Error("Remove this statement and implement this function");
+    return this._hitpoints;
   }
 }
